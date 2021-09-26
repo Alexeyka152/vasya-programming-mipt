@@ -1,38 +1,25 @@
 import turtle
+from math import radians, sin, cos
 
-symbols = {
-    '0': [(0, 0), (1, 0), (1, -2), (0, -2), (0, 0)],
-    '1': [(0, -1), (1, 0), (1, -2)],
-    '2': [(0, 0), (1, 0), (1, -1), (0, -2), (1, -2)],
-    '3': [(0, 0), (1, 0), (0, -1), (1, -1), (0, -2)],
-    '4': [(0, 0), (0, -1), (1, -1), (1, 0), (1, -2)],
-    '5': [(1, 0), (0, 0), (0, -1), (1, -1), (1, -2), (0, -2)],
-    '6': [(1, 0), (0, -1), (0, -2), (1, -2), (1, -1), (0, -1)],
-    '7': [(0, 0), (1, 0), (0, -1), (0, -2)],
-    '8': [(0, -1), (1, -1), (1, -2), (0, -2), (0, 0), (1, 0), (1, -2)],
-    '9': [(1, -1), (0, -1), (0, 0), (1, 0), (1, -1), (0, -2)]
-}
+V = 50
+phi = radians(60)
+k = 0.7
+dt = 0.1
+g = -9.8
 
+x, y = 0, 0
+Vx = V * cos(phi)
+Vy = V * sin(phi)
 
-def draw_symbol(s, scale=10):
-    x0, y0 = turtle.xcor(), turtle.ycor()
-    turtle.up()
-    turtle.goto(x0 + symbols[s][0][0] * scale, y0 + symbols[s][0][1] * scale)
-    turtle.down()
-    for x, y in symbols[s]:
-        turtle.goto(x0 + x * scale, y0 + y * scale)
+turtle.shape('circle')
+turtle.turtlesize(0.1)
 
+while y > 10 or Vx**2 + Vy**2 > 1:
+    if y < 0 and Vy < 0:
+        Vx = k*Vx
+        Vy = -k*Vy
+    x += Vx*dt
+    y += Vy*dt + g*dt**2/2
+    Vy += g*dt
+    turtle.goto(x, y)
 
-def draw_number(n, scale = 10):
-    x0, y0 = turtle.xcor(), turtle.ycor()
-    delta_x = 0
-    for i in str(n):
-        draw_symbol(i, 10)
-        delta_x += scale * 2
-        turtle.up()
-        turtle.goto(x0 + delta_x, y0)
-
-
-turtle.color('blue')
-draw_number(141700)
-turtle.done()
